@@ -13,6 +13,8 @@ import Login from '../views/Login.vue'
 import PostIndex from '../views/Organization/Post/Index.vue'
 import AddSupplierService from '../views/Organization/Post/AddSupplierService.vue'
 
+import MaterialIndex from '../views/Material/Index.vue'
+
 import StepOne from '../views/Organization/Post/StepOne.vue'
 import StepTwo from '../views/Organization/Post/StepTwo.vue'
 import StepThree from '../views/Organization/Post/StepThree.vue'
@@ -26,6 +28,10 @@ export default new vueRouter({
       path : '/index',
       component : Index,
       children : [
+        {
+          path: '/material/index',
+          component: MaterialIndex
+        },
         {
           path:'/organization/post/addsupplier/success',
           component:Success
@@ -62,7 +68,7 @@ export default new vueRouter({
         },
         {
           path : '/',
-          redirect : '/organization/post/index'
+          redirect : '/material/index'
         },
       ]
     },
