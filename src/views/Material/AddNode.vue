@@ -1,0 +1,43 @@
+<style>
+
+</style>
+
+<template>
+  <Modal
+    v-model="modal1"
+    title="新增节点">
+    <Form :label-width="80">
+      <FormItem label="节点名称" style="margin-bottom: 0">
+        <Input v-model="value" placeholder="请输入节点名称"></Input>
+      </FormItem>
+    </Form>
+    <div slot="footer">
+      <Button type="primary" @click="ok">确定</Button>
+      <Button type="ghost" @click="cancel">取消</Button>
+    </div>
+  </Modal>
+</template>
+
+<script>
+  export default {
+    data(){
+      return{
+        modal1:false,
+        value:''
+      }
+    },
+    methods:{
+      open(){
+        this.modal1 = true
+      },
+      ok(){
+        console.log(this.value)
+        this.$emit('addNode', 0, this.value)
+        this.modal1 = false
+      },
+      cancel(){
+        this.modal1 = false
+      }
+    }
+  }
+</script>
