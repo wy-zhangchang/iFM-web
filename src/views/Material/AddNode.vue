@@ -23,16 +23,18 @@
     data(){
       return{
         modal1:false,
-        value:''
+        value:'',
+        treeNodeId:''
       }
     },
     methods:{
-      open(){
+      open(treeNodeId){
+        this.treeNodeId = treeNodeId
         this.modal1 = true
       },
       ok(){
         console.log(this.value)
-        this.$emit('addNode', 0, this.value)
+        this.$emit('addNode', this.treeNodeId, this.value)
         this.modal1 = false
       },
       cancel(){

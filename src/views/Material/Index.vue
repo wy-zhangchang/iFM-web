@@ -159,8 +159,8 @@
       AddNode
     },
     methods: {
-      addNode(id, value){
-        let rootNode = this.ztreeObj.getNodeByParam('id', id)
+      addNode(treeNodeId, value){
+        let rootNode = this.ztreeObj.getNodeByParam('id', treeNodeId)
         console.log(rootNode)
         let newNode = {name:value, open:true, nodes:[{name:'AAA'}]}
         console.log(newNode)
@@ -190,7 +190,8 @@
       },
       initData(){
         // 注：pId指向的是父节点的id
-        return [{ id:1, pId:0, name:"父节点1", open:true},
+        return [
+          { id:1, pId:0, name:"父节点1", open:true},
           { id:11, pId:1, name:"父节点11"},
           { id:111, pId:11, name:"叶子节点111"},
           { id:112, pId:11, name:"叶子节点112"},
@@ -218,7 +219,8 @@
           { id:232, pId:23, name:"叶子节点232"},
           { id:233, pId:23, name:"叶子节点233"},
           { id:234, pId:23, name:"叶子节点234"},
-          { id:3, pId:0, name:"父节点3", isParent:true}]
+          { id:3, pId:0, name:"父节点3", isParent:true}
+          ]
       },
       // 初始化树结构
       initTree(){
@@ -229,7 +231,7 @@
       addHoverDom(treeId, treeNode) {
         // 获取根元素节点
         var sObj = $("#" + treeNode.tId + "_span");
-
+        var node = this.ztreeObj.getNodeByParam('tId', treeNode.tId)
         // 如果已经存在添加控件，则不处理
         if (treeNode.editNameFlag || $("#addBtn_"+treeNode.tId).length>0) return;
         // 如果已经存在编辑控件，则不处理
@@ -245,15 +247,29 @@
         var removeStr = "<span class='button remove' id='removeBtn_" + treeNode.tId + "' title='remove node' onfocus='this.blur();'></span>";
 
         // 并将添加节点的元素追加到当前根元素节点之后
-        sObj.after(removeStr)  // 删除控件
-        sObj.after(editStr)    // 编辑控件
-        sObj.after(addStr);    // 添加控件
+        switch (node.level){
+          case 0:
+            sObj.after(addStr);    // 添加控件
+            break;
+          case 1:
+            sObj.after(removeStr)  // 删除控件
+            sObj.after(editStr)    // 编辑控件
+            sObj.after(addStr);    // 添加控件
+            break;
+          default:
+            sObj.after(removeStr)  // 删除控件
+            sObj.after(editStr)    // 编辑控件
+            break;
+        }
+       // sObj.after(removeStr)  // 删除控件
+       // sObj.after(editStr)    // 编辑控件
+       // sObj.after(addStr);    // 添加控件
 
         // 获取添加节点控件
         var addBtn = $("#addBtn_"+treeNode.tId);
         // 如果存在，则绑定单击事件
         if (addBtn) addBtn.bind("click", ()=>{
-          this.$refs.addNode.open()
+          this.$refs.addNode.open(treeNode.id)
           // 获取当前的节点（参数：id选择器）
           // var zTree = $.fn.zTree.getZTreeObj("treeDemo");
           // 在当前节点上添加子节点
