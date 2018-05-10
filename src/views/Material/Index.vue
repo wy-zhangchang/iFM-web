@@ -50,7 +50,10 @@
     /*background: none;*/
   }
   .ztree * {
-    font-size: 14px !important;
+    font-size: 16px !important;
+  }
+  .ztree li{
+    margin: 5px 0;
   }
   .ztree li span.button.add{
     background-image: url("/static/images/ic_add.png");
@@ -91,6 +94,8 @@
     <div class="right">
     </div>
     <AddNode ref="addNode" @addNode="addNode"></AddNode>
+    <EditNode ref="editNode" @editNode="editNode"></EditNode>
+    <DelNode ref="delNode" @delNode="delNode"></DelNode>
   </Card>
 </template>
 
@@ -101,13 +106,15 @@
 //  import 'ztree/css/zTreeStyle/zTreeStyle.css'
 
   import AddNode from './AddNode.vue'
+  import EditNode from './EditNode.vue'
+  import DelNode from './DelNode.vue'
 
   export default {
     // 数据
     data(){
       return{
         ztreeObj:'',
-        newCount:1,
+        newCount:100,
         // 2.zTree配置数据
         setting:{
           // 视图
@@ -156,35 +163,65 @@
     },
     // 方法
     components:{
-      AddNode
+      AddNode,
+      EditNode,
+      DelNode
     },
     methods: {
-      addNode(treeNodeId, value){
-        let rootNode = this.ztreeObj.getNodeByParam('id', treeNodeId)
-        console.log(rootNode)
-        let newNode = {name:value, open:true, nodes:[{name:'AAA'}]}
-        console.log(newNode)
-        this.zNodes.push(newNode)
-        this.ztreeObj.addNodes(rootNode, newNode)
-        console.log(this.zNodes)
+      // 删除节点
+      delNode(treeNodeId){
+        // 获取当前节点
+        let node = this.ztreeObj.getNodeByParam('id', treeNodeId)
+        // 删除当前节点
+        this.ztreeObj.removeNode(node)
+        // TODO 数据库操作
       },
+      // 编辑节点
+      editNode(treeNodeId, value){
+        let node = this.ztreeObj.getNodeByParam('id', treeNodeId)
+        // 覆盖当前节点名称
+        node.name = value
+        // 直接更新当前节点名称（方式1）
+        this.ztreeObj.updateNode(node)
+        // 使当前节点进入编辑模式（方式2）
+        // this.ztreeObj.editName(node)
+        // TODO 数据库操作
+      },
+      // 添加节点
+      addNode(treeNodeId, value){
+        // 当前父节点
+        let rootNode = this.ztreeObj.getNodeByParam('id', treeNodeId)
+        // 当前子节点
+        // let newNode = {name:value, open:true, nodes:[{name:'AAA'}]}
+        // 注意：自增运算符的执行顺序，每个新节点都必须设置对应的父节点ID
+        let newNode = {id:this.newCount++, pId:rootNode.id, name:value}
+        // 将子节点添加到父节点中
+        this.ztreeObj.addNodes(rootNode, newNode)
+        // TODO 刷新ztree树
+        // this.ztreeObj.refresh()
+        // TODO 数据库操作
+        // this.zNodes.push(newNode)
+        // this.zNodes.splice(rootNode.level, 0, newNode)
+        console.log(this.ztreeObj.getNodes())
+      },
+      // 注：ID作为每个节点的唯一标识
       initData2(){
         return[{
           id:0,
           name:'全部',
           open:true,  // 指定当前父节点展开
-          nodes:[{name:'父节点1', open:true, nodes:[
-            {name:'子节点11'},
-            {name:'子节点12'},
-            {name:'子节点13'}
-          ]},{name:'父节点2', nodes:[
-            {name:'子节点21'},
-            {name:'子节点22'},
-            {name:'子节点23'}
-          ]},{name:'父节点3', nodes:[
-            {name:'子节点31'},
-            {name:'子节点32'},
-            {name:'子节点33'}
+          nodes:[{id:1, name:'父节点1', open:true, nodes:[ // 注：此数据需使用computed计算方式生成（vuex管理状态）
+            {id:11, name:'子节点11'},
+            {id:12, name:'子节点12'},
+            {id:13, name:'子节点13'}
+          ]},{id:2, name:'父节点2', nodes:[
+            {id:21, name:'子节点21'},
+            {id:22, name:'子节点22'},
+            {id:23, name:'子节点23'}
+          ]},{id:3, name:'父节点3', nodes:[
+            {id:31, name:'子节点31'},
+            {id:32, name:'子节点32'},
+            {id:33, name:'子节点33'}
           ]}]
         }]
       },
@@ -261,16 +298,13 @@
             sObj.after(editStr)    // 编辑控件
             break;
         }
-       // sObj.after(removeStr)  // 删除控件
-       // sObj.after(editStr)    // 编辑控件
-       // sObj.after(addStr);    // 添加控件
-
         // 获取添加节点控件
         var addBtn = $("#addBtn_"+treeNode.tId);
         // 如果存在，则绑定单击事件
         if (addBtn) addBtn.bind("click", ()=>{
+          // 弹出添加对话框
           this.$refs.addNode.open(treeNode.id)
-          // 获取当前的节点（参数：id选择器）
+          // 获取当前的节点（参数：id 选择器）
           // var zTree = $.fn.zTree.getZTreeObj("treeDemo");
           // 在当前节点上添加子节点
           // zTree.addNodes(treeNode, {id:(100 + this.newCount), pId:treeNode.id, name:"new node" + (this.newCount++)});
@@ -280,20 +314,16 @@
         var editBtn = $("#editBtn_"+treeNode.tId);
         // 如果存在，则绑定单击事件
         if (editBtn) editBtn.bind("click", ()=>{
-          // 获取当前的节点（参数：id选择器）
-          var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-          // 在当前节点上编辑子节点
-          alert(JSON.stringify(zTree))
+          // 弹出编辑对话框
+          this.$refs.editNode.open(treeNode.id, treeNode.name)
           return false;
         });
         // 获取删除节点控件
         var removeBtn = $("#removeBtn_"+treeNode.tId);
         // 如果存在，则绑定单击事件
         if (removeBtn) removeBtn.bind("click", ()=>{
-          // 获取当前的节点（参数：id选择器）
-          var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-          // 在当前节点上编辑子节点
-          alert(JSON.stringify(zTree))
+          // 弹出删除对话框
+          this.$refs.delNode.open(treeNode.id)
           return false;
         });
       },

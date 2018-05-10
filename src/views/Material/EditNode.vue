@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="modal1" title="新增节点">
+  <Modal v-model="modal1" title="编辑节点">
     <Form :label-width="80">
       <FormItem label="节点名称" style="margin-bottom: 0">
         <Input v-model="value" placeholder="请输入节点名称"></Input>
@@ -26,12 +26,13 @@
       }
     },
     methods:{
-      open(treeNodeId){
+      open(treeNodeId, treeNodeName){
         this.treeNodeId = treeNodeId
+        this.value = treeNodeName
         this.modal1 = true
       },
       ok(){
-        this.$emit('addNode', this.treeNodeId, this.value)
+        this.$emit('editNode', this.treeNodeId, this.value)
         this.modal1 = false
       },
       cancel(){
