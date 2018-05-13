@@ -22,16 +22,25 @@
       return{
         modal1:false,
         value:'',
-        treeNodeId:''
+        treeNodeId:'',
+        treeNodeLevel:''
       }
     },
     methods:{
-      open(treeNodeId){
+      open(treeNodeId, treeNodeLevel){
         this.treeNodeId = treeNodeId
+        this.treeNodeLevel = treeNodeLevel
         this.modal1 = true
       },
       ok(){
-        this.$emit('addNode', this.treeNodeId, this.value)
+        const {treeNodeLevel, treeNodeId, value} = this
+        if(treeNodeLevel == 1){
+          this.$store.dispatch('getMaterialtype_update', {id:treeNodeId, name:value})
+        }else if(treeNodeLevel == 0){
+          this.$store.dispatch('getMaterialtype_add', {id:treeNodeId, name:value})
+        }
+        // 获取服务器返回的id
+        this.$emit('addNode', treeNodeId, value)
         this.modal1 = false
       },
       cancel(){
