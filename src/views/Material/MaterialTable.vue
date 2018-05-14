@@ -1,10 +1,17 @@
 <template>
-  <Table border ref="selection" :columns="columns4" :data="materiallists"></Table>
+  <div>
+    <Table border ref="selection" :columns="columns4" :data="materiallists"></Table>
+    <DelItem ref="delItem" :pId="pId"></DelItem>
+  </div>
 </template>
 
 <script>
   import {mapState} from 'vuex'
+  import DelItem from './DelItem.vue'
   export default{
+    props:{
+      pId:Number
+    },
     data(){
       return{
         // 表格数据
@@ -50,7 +57,7 @@
                   },
                   on: {
                     click: () => {
-//                      this.delete(params.row)
+                      this.delete(params.row.id)
                     }
                   }
                 }, '删除')
@@ -62,6 +69,14 @@
     },
     computed:{
       ...mapState(['materiallists'])
+    },
+    methods:{
+      delete(cId){
+        this.$refs.delItem.open(cId)
+      }
+    },
+    components:{
+      DelItem
     }
   }
 </script>

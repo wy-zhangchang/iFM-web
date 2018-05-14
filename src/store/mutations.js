@@ -5,7 +5,8 @@ import {
   RECEIVE_MATERIALTYPE_ADD,
   RECEIVE_MATERIALTYPE_UPDATE,
   RECEIVE_MATERIALLIST,
-  RECEIVE_MATERIALLIST_ADD
+  RECEIVE_MATERIALLIST_ADD,
+  RECEIVE_MATERIALLIST_DEL
 } from './mutation-types'
 
 export default {
@@ -31,5 +32,9 @@ export default {
 
   [RECEIVE_MATERIALLIST_ADD](state, {data}){
     state.materiallists_add = data
+  },
+
+  [RECEIVE_MATERIALLIST_DEL](state, {data}){
+    state.materiallists_del = data
   }
 }

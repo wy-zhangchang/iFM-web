@@ -5,7 +5,8 @@ import {
   reqMaterialtype_add,
   reqMaterialtype_update,
   reqMateriallist,
-  reqMateriallist_add
+  reqMateriallist_add,
+  reqMateriallist_del
 } from '../api'
 
 import {
@@ -14,7 +15,8 @@ import {
   RECEIVE_MATERIALTYPE_ADD,
   RECEIVE_MATERIALTYPE_UPDATE,
   RECEIVE_MATERIALLIST,
-  RECEIVE_MATERIALLIST_ADD
+  RECEIVE_MATERIALLIST_ADD,
+  RECEIVE_MATERIALLIST_DEL
 } from './mutation-types'
 
 export default {
@@ -46,5 +48,10 @@ export default {
   async getMateriallist_add({commit}, {id, name, brand, unit}){
     const result = await reqMateriallist_add({id, name, brand, unit})
     commit(RECEIVE_MATERIALLIST_ADD, {data:result.data})
+  },
+
+  async getMateriallist_del({commit}, {pId, cId}){
+    const result = await reqMateriallist_del({pId, cId})
+    commit(RECEIVE_MATERIALLIST_DEL, {data:result.data})
   }
 }

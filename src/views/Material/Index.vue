@@ -120,7 +120,7 @@
       </div>
       <!-- 表格 -->
       <div class="mid">
-        <MaterialTable></MaterialTable>
+        <MaterialTable :pId="currNodeId"></MaterialTable>
       </div>
       <!-- 分页 -->
       <div class="bot">
@@ -145,6 +145,7 @@
   import DelNode from './DelNode.vue'
   import MaterialTable from './MaterialTable.vue'
   import AddItem from './AddItem.vue'
+  import DelItem from './DelItem.vue'
 
   import {mapState} from 'vuex'
 
@@ -152,7 +153,7 @@
     // 数据
     data(){
       return{
-        currNodeId:'',
+        currNodeId:0,
         node:'',  // 保存当前请求的节点
         url:'',   // 保存当前请求的URL
         ztreeObj:'',
@@ -220,10 +221,11 @@
     // 方法
     components:{
       AddNode,
-      EditNode,
       DelNode,
+      EditNode,
       MaterialTable,
-      AddItem
+      AddItem,
+      DelItem
     },
     methods: {
       add(){
