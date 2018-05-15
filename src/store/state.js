@@ -6,5 +6,6 @@ export default {
   materialtypes_update:{},
   materiallists:[],
   materiallists_add:{},
-  materiallists_del:{}
+  materiallists_del:{},
+  materiallists_mod:{}
 }

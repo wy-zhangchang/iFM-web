@@ -11,3 +11,4 @@ export const reqMaterialtype_update = ({id, name})=> ajax('/api/materialtype_upd
 export const reqMateriallist = ({id})=> ajax('/api/materiallist', {id})
 export const reqMateriallist_add = ({id, name, brand, unit})=> ajax('/api/materiallist_add', {id, name, brand, unit})
 export const reqMateriallist_del = ({pId, cId})=> ajax('/api/materiallist_del', {pId, cId})
+export const reqMateriallist_mod = ({pId, id, name, brand, unit})=> ajax('/api/materiallist_mod', {pId, id, name, brand, unit})

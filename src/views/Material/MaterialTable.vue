@@ -2,12 +2,15 @@
   <div>
     <Table border ref="selection" :columns="columns4" :data="materiallists"></Table>
     <DelItem ref="delItem" :pId="pId"></DelItem>
+    <EditItem ref="editItem" :pId="pId"></EditItem>
   </div>
 </template>
 
 <script>
   import {mapState} from 'vuex'
   import DelItem from './DelItem.vue'
+  import EditItem from './EditItem.vue'
+
   export default{
     props:{
       pId:Number
@@ -46,7 +49,7 @@
                   },
                   on: {
                     click: () => {
-//                      this.update(params.row)
+                      this.update(params.row)
                     }
                   }
                 }, '编辑'),
@@ -73,10 +76,14 @@
     methods:{
       delete(cId){
         this.$refs.delItem.open(cId)
+      },
+      update(item){
+        this.$refs.editItem.open(item)
       }
     },
     components:{
-      DelItem
+      DelItem,
+      EditItem
     }
   }
 </script>

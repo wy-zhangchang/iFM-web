@@ -3,7 +3,7 @@
 </style>
 
 <template>
-  <Modal v-model="modal1" title="新增物料">
+  <Modal v-model="modal1" title="编辑物料">
     <Form :label-width="80" v-model="item">
       <FormItem label="物料名称" style="margin-bottom: 0">
         <Input v-model="item.name" placeholder="请输入物料名称"></Input>
@@ -24,6 +24,9 @@
 
 <script>
   export default {
+    props:{
+      pId:Number
+    },
     data(){
       return{
         modal1:false,
@@ -31,19 +34,19 @@
           name:'',
           brand:'',
           unit:'',
-          pId:''
+          id:''
         }
       }
     },
     methods:{
-      open(id){
+      open(item){
         this.modal1 = true
-        this.item.pId = id
+        this.item = item
       },
       ok(){
-        const {pId, name, brand, unit} = this.item
-        this.$store.dispatch('getMateriallist_add', {id:pId, name, brand, unit})
-        this.$store.dispatch('getMateriallist', {id:pId})
+        const {id, name, brand, unit} = this.item
+        this.$store.dispatch('getMateriallist_mod', {pId:this.pId, id:id, name:name, brand:brand, unit:unit})
+        this.$store.dispatch('getMateriallist', {id:this.pId})
         this.modal1 = false
       },
       cancel(){
