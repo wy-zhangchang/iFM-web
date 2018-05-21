@@ -1,11 +1,11 @@
 <style scoped>
   .left{
     height: 600px;
-    width:25%;
+    width: 25%;
     border: 1px solid #ddd;
     float: left;
     padding: 0 6px;
-    overflow-y:auto;
+    overflow-y: auto;
   }
   .right{
     height: 600px;
@@ -69,7 +69,7 @@
     font-size: 16px !important;
   }
   .ztree li{
-    margin: 5px 0;
+    margin: 15px 0;
   }
   .ztree li span.button.add{
     background-image: url("/static/images/ic_add.png");
@@ -105,7 +105,7 @@
 <template>
   <Card>
     <!-- 左侧栏 -->
-    <div class="left">
+    <div class="left" id="left">
       <div class="t">
         <Input icon="search" placeholder="请输入搜索关键字" style="width: 100%"/>
       </div>
@@ -340,6 +340,9 @@
       },
       // 添加鼠标悬停
       addHoverDom(treeId, treeNode) {
+        const div = document.getElementById('left')
+              div.scrollLeft = div.scrollWidth
+
         // TODO treeId 是整个根节点id -> treeDemo
         // 获取根元素节点
         var sObj = $("#" + treeNode.tId + "_span");
@@ -409,6 +412,7 @@
       },
       // 移除鼠标悬停
       removeHoverDom(treeId, treeNode) {
+        document.getElementById('left').scrollLeft = 0
         $("#addBtn_"+treeNode.tId).unbind().remove();
         $("#editBtn_"+treeNode.tId).unbind().remove();
         $("#removeBtn_"+treeNode.tId).unbind().remove();
